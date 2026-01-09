@@ -14,22 +14,22 @@ repository:
 
 labels:
   # Technologie (lila) - Abhängigkeiten zu Technologien
-  - name: "tec: kafka"
+  - name: "tech: kafka"
     color: "5319E7"
     description: "Benötigt Kafka als Technologie"
-  - name: "tec: gitlab"
+  - name: "tech: gitlab"
     color: "5319E7"
     description: "Benötigt GitLab"
-  - name: "tec: grafana-cloud"
+  - name: "tech: grafana-cloud"
     color: "5319E7"
     description: "Benötigt Grafana Cloud"
-  - name: "tec: acme"
+  - name: "tech: acme"
     color: "5319E7"
     description: "Benötigt ACME-Server"
-  - name: "tec: artifactory"
+  - name: "tech: artifactory"
     color: "5319E7"
     description: "Benötigt Artifactory"
-  - name: "tec: vault"
+  - name: "tech: vault"
     color: "5319E7"
     description: "Benötigt HashiCorp Vault"
 
