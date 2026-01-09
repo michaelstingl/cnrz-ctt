@@ -29,6 +29,9 @@ labels:
   - name: "tec: artifactory"
     color: "5319E7"
     description: "Benötigt Artifactory"
+  - name: "tec: vault"
+    color: "5319E7"
+    description: "Benötigt HashiCorp Vault"
 
   # Meta (grau) - Status-Labels
   - name: "duplicate"
