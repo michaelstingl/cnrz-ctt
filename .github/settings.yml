@@ -1,0 +1,52 @@
+# Repository Settings - managed by Probot Settings App
+# https://probot.github.io/apps/settings/
+#
+# ⚠️  Labels die hier NICHT stehen werden GELÖSCHT!
+#     Alle Labels müssen hier definiert sein.
+
+repository:
+  name: cnrz-ctt-test
+  description: "CTT Migration Tracking (Test)"
+  private: false
+  has_issues: true
+  has_projects: false
+  has_wiki: false
+
+labels:
+  # Technologie (lila) - Abhängigkeiten zu Technologien
+  - name: "tec: kafka"
+    color: "5319E7"
+    description: "Benötigt Kafka als Technologie"
+  - name: "tec: gitlab"
+    color: "5319E7"
+    description: "Benötigt GitLab"
+  - name: "tec: grafana-cloud"
+    color: "5319E7"
+    description: "Benötigt Grafana Cloud"
+  - name: "tec: acme"
+    color: "5319E7"
+    description: "Benötigt ACME-Server"
+  - name: "tec: artifactory"
+    color: "5319E7"
+    description: "Benötigt Artifactory"
+
+  # Meta (grau) - Status-Labels
+  - name: "duplicate"
+    color: "94969A"
+    description: "This issue or pull request already exists"
+  - name: "invalid"
+    color: "94969A"
+    description: "This doesn't seem right"
+
+  # Aktion (grün) - Handlungsbedarf
+  - name: "help wanted"
+    color: "0E8A16"
+    description: "Extra attention is needed"
+
+  # Info (blau) - Informations-Labels
+  - name: "documentation"
+    color: "0075CA"
+    description: "Improvements or additions to documentation"
+  - name: "question"
+    color: "0075CA"
+    description: "Further information is requested"
