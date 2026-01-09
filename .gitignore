@@ -1,0 +1,6 @@
+# macOS
+.DS_Store
+
+# Lokale Issue-Dateien (nicht ins Repo)
+# Diese enthalten Hub-Referenzen und lokale Metadaten
+issues/

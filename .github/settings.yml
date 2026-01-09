@@ -5,8 +5,8 @@
 #     Alle Labels müssen hier definiert sein.
 
 repository:
-  name: cnrz-ctt-test
-  description: "CTT Migration Tracking (Test)"
+  name: cnrz-ctt
+  description: "CTT Migration Tracking"
   private: false
   has_issues: true
   has_projects: false
