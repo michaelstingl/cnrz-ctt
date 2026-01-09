@@ -33,6 +33,17 @@ labels:
     color: "5319E7"
     description: "Benötigt HashiCorp Vault"
 
+  # Owner (orange) - Service-Verantwortung
+  - name: "owner: S15"
+    color: "E67300"
+    description: "Owner: S15 Messaging"
+  - name: "owner: S4"
+    color: "E67300"
+    description: "Owner: S4 DBaaS"
+  - name: "owner: CTT"
+    color: "E67300"
+    description: "Owner: CTT (Cloud Transformation Team)"
+
   # Meta (grau) - Status-Labels
   - name: "duplicate"
     color: "94969A"
