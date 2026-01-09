@@ -40,9 +40,9 @@ labels:
   - name: "owner: S4"
     color: "E67300"
     description: "Owner: S4 DBaaS"
-  - name: "owner: CTT"
+  - name: "owner: S5 (CTT)"
     color: "E67300"
-    description: "Owner: CTT (Cloud Transformation Team)"
+    description: "Owner: S5 Migration Services (CTT)"
 
   # Meta (grau) - Status-Labels
   - name: "duplicate"
