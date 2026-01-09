@@ -276,61 +276,101 @@ function diff(issueNumber) {
   const localMd = readMd(files.md);
   const ghIssue = fetchIssue(issueNumber);
 
-  // Compare fields
-  const diffs = [];
+  // Compare metadata
+  const metaDiffs = [];
 
   // Title
   if (localJson.title !== ghIssue.title) {
-    diffs.push({
-      field: 'title',
-      local: localJson.title,
-      github: ghIssue.title
-    });
+    metaDiffs.push({ field: 'title', local: localJson.title, github: ghIssue.title });
   }
 
   // State
   if (localJson.state !== ghIssue.state.toLowerCase()) {
-    diffs.push({
-      field: 'state',
-      local: localJson.state,
-      github: ghIssue.state.toLowerCase()
-    });
+    metaDiffs.push({ field: 'state', local: localJson.state, github: ghIssue.state.toLowerCase() });
   }
 
   // Labels
   const localLabels = (localJson.labels || []).sort();
   const ghLabels = ghIssue.labels.map(l => l.name).sort();
-  if (JSON.stringify(localLabels) !== JSON.stringify(ghLabels)) {
-    diffs.push({
+  const labelsAdded = localLabels.filter(l => !ghLabels.includes(l));
+  const labelsRemoved = ghLabels.filter(l => !localLabels.includes(l));
+  if (labelsAdded.length > 0 || labelsRemoved.length > 0) {
+    metaDiffs.push({
       field: 'labels',
-      local: localLabels.join(', ') || '(none)',
-      github: ghLabels.join(', ') || '(none)'
+      added: labelsAdded,
+      removed: labelsRemoved
     });
   }
 
   // Body
   const localBody = localMd.trim();
   const ghBody = (ghIssue.body || '').trim();
-  if (localBody !== ghBody) {
-    diffs.push({
-      field: 'body',
-      local: `${localBody.length} chars`,
-      github: `${ghBody.length} chars`,
-      details: 'Content differs (use pull/push to sync)'
-    });
+  const bodyDiffers = localBody !== ghBody;
+
+  // Output
+  if (metaDiffs.length === 0 && !bodyDiffers) {
+    console.log('✓ Local and GitHub are in sync');
+    return;
   }
 
-  if (diffs.length === 0) {
-    console.log('✓ Local and GitHub are in sync');
-  } else {
-    console.log('Differences found:\n');
-    for (const d of diffs) {
-      console.log(`  ${d.field}:`);
-      console.log(`    Local:  ${d.local}`);
-      console.log(`    GitHub: ${d.github}`);
-      if (d.details) {
-        console.log(`    Note:   ${d.details}`);
+  // Metadata diff
+  if (metaDiffs.length > 0) {
+    console.log('── Metadata (.json) ──\n');
+    for (const d of metaDiffs) {
+      if (d.field === 'labels') {
+        console.log('  labels:');
+        for (const l of d.removed) {
+          console.log(`    \x1b[31m- ${l}\x1b[0m`);
+        }
+        for (const l of d.added) {
+          console.log(`    \x1b[32m+ ${l}\x1b[0m`);
+        }
+      } else {
+        console.log(`  ${d.field}:`);
+        console.log(`    \x1b[31m- ${d.github}\x1b[0m`);
+        console.log(`    \x1b[32m+ ${d.local}\x1b[0m`);
       }
+      console.log();
+    }
+  }
+
+  // Body diff
+  if (bodyDiffers) {
+    console.log('── Body (.md) ──\n');
+    console.log(`  Local: ${localBody.length} chars, GitHub: ${ghBody.length} chars\n`);
+    showLineDiff(localBody, ghBody);
+  }
+}
+
+function showLineDiff(local, remote) {
+  const localLines = local.split('\n');
+  const remoteLines = remote.split('\n');
+
+  const maxLines = Math.max(localLines.length, remoteLines.length);
+  let inDiff = false;
+  let diffStart = -1;
+
+  for (let i = 0; i < maxLines; i++) {
+    const localLine = localLines[i] || '';
+    const remoteLine = remoteLines[i] || '';
+
+    if (localLine !== remoteLine) {
+      if (!inDiff) {
+        diffStart = i;
+        inDiff = true;
+        if (i > 0) {
+          console.log(`  ${String(i).padStart(3)}   ${localLines[i-1]?.substring(0, 70) || ''}`);
+        }
+      }
+      if (remoteLine && (!localLines[i] || localLine !== remoteLine)) {
+        console.log(`  ${String(i+1).padStart(3)} - \x1b[31m${remoteLine.substring(0, 70)}\x1b[0m`);
+      }
+      if (localLine && (!remoteLines[i] || localLine !== remoteLine)) {
+        console.log(`  ${String(i+1).padStart(3)} + \x1b[32m${localLine.substring(0, 70)}\x1b[0m`);
+      }
+    } else if (inDiff) {
+      console.log(`  ${String(i+1).padStart(3)}   ${localLine.substring(0, 70)}`);
+      inDiff = false;
       console.log();
     }
   }
@@ -450,9 +490,13 @@ Usage:
   node gh-sync.mjs pull --all        Pull all local issues
   node gh-sync.mjs push <number>     Push local issue to GitHub
   node gh-sync.mjs push --all        Push all local issues
-  node gh-sync.mjs diff <number>     Show diff between local and GitHub
+  node gh-sync.mjs diff <number>     Show line-by-line diff (local vs GitHub)
   node gh-sync.mjs status            Show sync status of all issues
   node gh-sync.mjs create <slug>     Create new issue template
+  node gh-sync.mjs --help            Show this help
+
+Local-only fields (preserved on pull):
+  hub_projekt, typ, technologie_steckbrief, related_issues, body_file
 
 Examples:
   node gh-sync.mjs pull 1
